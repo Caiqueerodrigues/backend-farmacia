@@ -40,4 +40,11 @@ public class remedioController {
          //metódo do repository que retorna uma referencia do objeto pelo id
         remedio.atualizarInformacoes(dados); //atualizar os dados da entidade
     }
+
+    @DeleteMapping("/{id}") // atributo dinamico, após a rota existente já
+    @Transactional // faz o rollback caso não de certo
+    public void deletar(@PathVariable Long id) {
+        //@PathVariable é para pegar o id da url
+        repository.deleteById(id);
+    }
 }
