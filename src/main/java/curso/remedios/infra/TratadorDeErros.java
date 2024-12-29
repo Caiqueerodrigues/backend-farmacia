@@ -1,5 +1,6 @@
 package curso.remedios.infra;
 
+import java.nio.file.AccessDeniedException;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException.Forbidden;
 
 import curso.remedios.DTO.ResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,5 +39,4 @@ public class TratadorDeErros {
         var resposta = new ResponseDto("", campos, "", "");
         return ResponseEntity.status(400).body(resposta);
     }
-
 }

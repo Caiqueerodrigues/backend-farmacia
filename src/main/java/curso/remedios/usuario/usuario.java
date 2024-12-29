@@ -1,5 +1,12 @@
 package curso.remedios.usuario;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,11 +25,28 @@ import lombok.Setter;
 @AllArgsConstructor //geração pelo LOMBOOK das coisas do JAVA
 @NoArgsConstructor //geração pelo LOMBOOK das coisas do JAVA
 @EqualsAndHashCode(of = "id") //geração pelo LOMBOOK das coisas do JAVA
-public class Usuario {
+public class Usuario implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String login;
     private String senha;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() { //controle de acesso por perfis
+        return List.of(new SimpleGrantedAuthority(("ROLE_USER")));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.login;
+    }
+
+    
 }
