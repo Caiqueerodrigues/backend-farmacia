@@ -1,12 +1,15 @@
 package curso.remedios.controllers;
 
+import curso.remedios.DTO.ResponseDto;
 import curso.remedios.remedio.*;
 import curso.remedios.remedio.DTO.DadosAlterarRemedio;
 import curso.remedios.remedio.DTO.DadosCadastroRemedio;
+import curso.remedios.remedio.DTO.DadosDetalhamentoRemedio;
 import curso.remedios.remedio.DTO.DadosListagemRemedio;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,28 +20,38 @@ public class remedioController {
 
     @Autowired // instanciando o repository, injeção de dependencias
     private RemedioRepository repository;
+    private ResponseDto response;
 
     @PostMapping
     @Transactional // faz o rollback caso não de certo
-    public void cadastrar(@RequestBody @Valid DadosCadastroRemedio dados) {
+    public ResponseEntity<ResponseDto> cadastrar(@RequestBody @Valid DadosCadastroRemedio dados) {
 
         repository.save(new Remedio(dados));
+        
+        var resposta = new ResponseDto("", "", "Remédio cadastrado com sucesso!", "");
+        return ResponseEntity.ok(resposta);
     }
 
     @GetMapping
-    public List<DadosListagemRemedio> listar() {
-        return repository.findAllByAtivoTrue()//retornaria como a entidade, não é ideal
+    public ResponseEntity<Object> listar() {
+        var list = repository.findAllByAtivoTrue()//retornaria como a entidade, não é ideal
             .stream() //para converter
             .map(DadosListagemRemedio::new) // transformar em DTO de listagem
             .toList(); //transformar em lista como manda a func
+        var resposta = new ResponseDto(list, "", "", "");
+        return ResponseEntity.ok(resposta);
     }
 
     @PutMapping
     @Transactional // faz o rollback caso não de certo
-    public void atualizar(@RequestBody @Valid DadosAlterarRemedio dados) {
+    public ResponseEntity<ResponseDto> atualizar(@RequestBody @Valid DadosAlterarRemedio dados) {
         var remedio = repository.getReferenceById(dados.id());
          //metódo do repository que retorna uma referencia do objeto pelo id
         remedio.atualizarInformacoes(dados); //atualizar os dados da entidade
+        
+        var remedioAlterado = new DadosDetalhamentoRemedio(remedio);
+        var resposta = new ResponseDto(remedioAlterado, "", "Remédio alterado com sucesso!", "");
+        return ResponseEntity.ok(resposta);
     }
 
     //Deletar Físico
@@ -52,11 +65,14 @@ public class remedioController {
     //Deletar Lógico
     @PutMapping("ativo/{status}/{id}")
     @Transactional // faz o rollback caso não de certo
-    public void inativar(@PathVariable Boolean status, @PathVariable Long id) {
-        System.out.println(status);
+    public ResponseEntity<ResponseDto> inativar(@PathVariable Boolean status, @PathVariable Long id) {
         //@PathVariable é para pegar o id da url
         var remedio = repository.getReferenceById(id);
          //metódo do repository que retorna uma referencia do objeto pelo id
         remedio.setAtivo(status); //Atualizando status
+        
+        var remedioAlterado = new DadosDetalhamentoRemedio(remedio);
+        var resposta = new ResponseDto(remedioAlterado, "", "Situação do remédio alterada com sucesso!", "");
+        return ResponseEntity.ok(resposta);
     }
 }
