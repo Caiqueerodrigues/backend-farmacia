@@ -50,6 +50,8 @@ public class remedioController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto> getById(@PathVariable Long id) {
         var remedio = repository.findById(id);
+        if(remedio.isEmpty()) throw new jakarta.persistence.EntityNotFoundException();
+        
         var resposta = new ResponseDto(remedio, "", "", "");
         return ResponseEntity.ok().body(resposta);
     }
