@@ -29,11 +29,13 @@ public class Remedio {
     private String lote;
     private int quantidade;
     private LocalDate validade;
+    private Boolean ativo;
 
     @Enumerated(EnumType.STRING) //sempre tem que ter quando ENUM
     private Laboratorio laboratorio;
 
     public Remedio(DadosCadastroRemedio dados) {
+        this.ativo = true;
         this.nome = dados.nome();
         this.via = dados.via();
         this.lote = dados.lote();

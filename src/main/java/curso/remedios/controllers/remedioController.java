@@ -27,7 +27,7 @@ public class remedioController {
 
     @GetMapping
     public List<DadosListagemRemedio> listar() {
-        return repository.findAll()//retornaria como a entidade, não é ideal
+        return repository.findAllByAtivoTrue()//retornaria como a entidade, não é ideal
             .stream() //para converter
             .map(DadosListagemRemedio::new) // transformar em DTO de listagem
             .toList(); //transformar em lista como manda a func
@@ -41,10 +41,22 @@ public class remedioController {
         remedio.atualizarInformacoes(dados); //atualizar os dados da entidade
     }
 
+    //Deletar Físico
     @DeleteMapping("/{id}") // atributo dinamico, após a rota existente já
     @Transactional // faz o rollback caso não de certo
     public void deletar(@PathVariable Long id) {
         //@PathVariable é para pegar o id da url
         repository.deleteById(id);
+    }
+
+    //Deletar Lógico
+    @PutMapping("ativo/{status}/{id}")
+    @Transactional // faz o rollback caso não de certo
+    public void inativar(@PathVariable Boolean status, @PathVariable Long id) {
+        System.out.println(status);
+        //@PathVariable é para pegar o id da url
+        var remedio = repository.getReferenceById(id);
+         //metódo do repository que retorna uma referencia do objeto pelo id
+        remedio.setAtivo(status); //Atualizando status
     }
 }
