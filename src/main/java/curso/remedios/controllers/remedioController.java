@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/remedios")
@@ -45,6 +47,13 @@ public class remedioController {
         return ResponseEntity.ok(resposta);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto> getById(@PathVariable Long id) {
+        var remedio = repository.findById(id);
+        var resposta = new ResponseDto(remedio, "", "", "");
+        return ResponseEntity.ok().body(resposta);
+    }
+    
     @PutMapping
     @Transactional // faz o rollback caso não de certo
     public ResponseEntity<ResponseDto> atualizar(@RequestBody @Valid DadosAlterarRemedio dados) {
