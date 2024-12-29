@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor //geração pelo LOMBOOK das coisas do JAVA
 @NoArgsConstructor //geração pelo LOMBOOK das coisas do JAVA
 @EqualsAndHashCode(of = "id") //geração pelo LOMBOOK das coisas do JAVA
-public class usuario {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
