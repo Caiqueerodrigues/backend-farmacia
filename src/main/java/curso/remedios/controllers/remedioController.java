@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -24,12 +25,14 @@ public class remedioController {
 
     @PostMapping
     @Transactional // faz o rollback caso não de certo
-    public ResponseEntity<ResponseDto> cadastrar(@RequestBody @Valid DadosCadastroRemedio dados) {
-
-        repository.save(new Remedio(dados));
+    public ResponseEntity<ResponseDto> cadastrar(@RequestBody @Valid DadosCadastroRemedio dados, UriComponentsBuilder uriBuilder) {
+        var remedio = new Remedio(dados); //para poder pegar o id do remedio cadastrado
+        repository.save(remedio);
         
-        var resposta = new ResponseDto("", "", "Remédio cadastrado com sucesso!", "");
-        return ResponseEntity.ok(resposta);
+        var resposta = new ResponseDto(remedio, "", "Remédio cadastrado com sucesso!", "");
+        var uri =  uriBuilder.path("/remedios/{id}").buildAndExpand(remedio.getId()).toUri();
+        //pegar a url para enviar na resposta, PADRÃO DESING REST
+        return ResponseEntity.created(uri).body(resposta);
     }
 
     @GetMapping
