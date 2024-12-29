@@ -5,6 +5,11 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+import curso.remedios.remedio.DTO.DadosAlterarRemedio;
+import curso.remedios.remedio.DTO.DadosCadastroRemedio;
+import curso.remedios.remedio.Enums.Laboratorio;
+import curso.remedios.remedio.Enums.Via;
+
 @Table(name = "remedio")
 @Entity(name = "remedios")
 @Getter //geração pelo LOMBOOK das coisas do JAVA
@@ -35,5 +40,11 @@ public class Remedio {
         this.quantidade = dados.quantidade();
         this.validade = dados.validade();
         this.laboratorio = dados.laboratorio();
+    }
+
+    public void atualizarInformacoes(DadosAlterarRemedio dados) {
+        if(dados.nome() != null) this.nome = dados.nome(); //validacao se o campo não é null
+        if(dados.via() != null) this.via = dados.via();
+        if(dados.laboratorio() != null) this.laboratorio = dados.laboratorio();
     }
 }

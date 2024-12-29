@@ -1,9 +1,9 @@
 package curso.remedios.controllers;
 
-import curso.remedios.remedio.DadosCadastroRemedio;
-import curso.remedios.remedio.DadosListagemRemedio;
-import curso.remedios.remedio.Remedio;
-import curso.remedios.remedio.RemedioRepository;
+import curso.remedios.remedio.*;
+import curso.remedios.remedio.DTO.DadosAlterarRemedio;
+import curso.remedios.remedio.DTO.DadosCadastroRemedio;
+import curso.remedios.remedio.DTO.DadosListagemRemedio;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,16 @@ public class remedioController {
     @GetMapping
     public List<DadosListagemRemedio> listar() {
         return repository.findAll()//retornaria como a entidade, não é ideal
-                .stream() //para converter
-                .map(DadosListagemRemedio::new) // transformar em DTO de listagem
-                .toList(); //transformar em lista como manda a func
+            .stream() //para converter
+            .map(DadosListagemRemedio::new) // transformar em DTO de listagem
+            .toList(); //transformar em lista como manda a func
+    }
+
+    @PutMapping
+    @Transactional // faz o rollback caso não de certo
+    public void atualizar(@RequestBody @Valid DadosAlterarRemedio dados) {
+        var remedio = repository.getReferenceById(dados.id());
+         //metódo do repository que retorna uma referencia do objeto pelo id
+        remedio.atualizarInformacoes(dados); //atualizar os dados da entidade
     }
 }

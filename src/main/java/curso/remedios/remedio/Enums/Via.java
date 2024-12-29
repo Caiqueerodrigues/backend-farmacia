@@ -1,4 +1,4 @@
-package curso.remedios.remedio;
+package curso.remedios.remedio.Enums;
 
 public enum Via {
     ORAL,

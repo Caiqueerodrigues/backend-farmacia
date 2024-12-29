@@ -1,4 +1,4 @@
-package curso.remedios.remedio;
+package curso.remedios.remedio.DTO;
 
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Future;
@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+
+import curso.remedios.remedio.Enums.Laboratorio;
+import curso.remedios.remedio.Enums.Via;
 
 public record DadosCadastroRemedio(
 
