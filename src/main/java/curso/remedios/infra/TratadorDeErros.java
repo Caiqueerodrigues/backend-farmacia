@@ -33,8 +33,6 @@ public class TratadorDeErros {
                 return Character.toUpperCase(errorMessage.charAt(0)) + errorMessage.substring(1); // Maiúscula na primeira letra
             })
             .collect(Collectors.joining(", ")); // Junta e concatena tudo com ","
-        
-
 
         var resposta = new ResponseDto("", campos, "", "");
         return ResponseEntity.status(400).body(resposta);
