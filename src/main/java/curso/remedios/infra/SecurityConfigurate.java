@@ -30,6 +30,12 @@ public class SecurityConfigurate {
             .authorizeHttpRequests(authz -> 
             authz
                 .requestMatchers(HttpMethod.POST, "/login").permitAll() //para permitir seguir a req sem token
+                .requestMatchers(HttpMethod.GET, 
+                   "/swagger-ui/**",    // Acesso ao Swagger UI
+                    "/v3/api-docs/**",   // Acesso à documentação da API
+                    "/swagger-ui.html",  // Acesso à página principal do Swagger
+                    "/swagger-ui/index.html" // Acesso ao Swagger UI
+                ).permitAll() //para permitir seguir a req sem token
                 .anyRequest().authenticated()) //todas as outras precisan do token
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) 
                 //adicionar 1°nosso filtro, 2° o do Spring
