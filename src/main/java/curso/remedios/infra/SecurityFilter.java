@@ -47,7 +47,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var authorization = request.getHeader("Authorization"); //pegar o authorization do header
         
         if(authorization != null) {
-            return authorization;
+            return authorization.replace("Bearer ", "");
         }
         
         return null;

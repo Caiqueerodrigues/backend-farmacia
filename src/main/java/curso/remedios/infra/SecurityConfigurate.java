@@ -1,5 +1,6 @@
 package curso.remedios.infra;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,10 +12,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity //indica ao spring que irá alterar a configuração de segurança
 public class SecurityConfigurate {
+
+    @Autowired
+    private SecurityFilter securityFilter;
 
     //configurar a aplicação como STATELESS
     @Bean
@@ -26,6 +31,8 @@ public class SecurityConfigurate {
             authz
                 .requestMatchers(HttpMethod.POST, "/login").permitAll() //para permitir seguir a req sem token
                 .anyRequest().authenticated()) //todas as outras precisan do token
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) 
+                //adicionar 1°nosso filtro, 2° o do Spring
             .build();
     }
 
