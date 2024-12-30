@@ -15,7 +15,19 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        var tokenJWT = recuperarToken(request);
+        
         filterChain.doFilter(request, response); //chamar o proximo filtro, similar ao next() do express
     }
+        
+        private String recuperarToken(HttpServletRequest request) {
+            var authorization = request.getHeader("Authorization"); //pegar o authorization do header
+            
+            if(authorization == null || authorization.isEmpty() || !authorization.startsWith("Bearer ")) {
+                throw new RuntimeException("Token inválido!");
+            }
+            return authorization;
+        }
 
 }
