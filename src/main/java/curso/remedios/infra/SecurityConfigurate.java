@@ -2,6 +2,7 @@ package curso.remedios.infra;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,9 +20,13 @@ public class SecurityConfigurate {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authz -> 
+            authz
+                .requestMatchers(HttpMethod.POST, "/login").permitAll() //para permitir seguir a req sem token
+                .anyRequest().authenticated()) //todas as outras precisan do token
+            .build();
     }
 
     @Bean
