@@ -30,6 +30,7 @@ public class SecurityConfigurate {
             .authorizeHttpRequests(authz -> 
             authz
                 .requestMatchers(HttpMethod.POST, "/login").permitAll() //para permitir seguir a req sem token
+                .requestMatchers(HttpMethod.POST, "/usuario").permitAll() //para permitir seguir a req sem token
                 .requestMatchers(HttpMethod.GET, 
                    "/swagger-ui/**",    // Acesso ao Swagger UI
                     "/v3/api-docs/**",   // Acesso à documentação da API

@@ -2,7 +2,7 @@ package curso.remedios.usuario.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record DadosAuth(
+public record DadosUser(
     @NotBlank
     String login,
 

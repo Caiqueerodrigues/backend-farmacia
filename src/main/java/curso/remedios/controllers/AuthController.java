@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import curso.remedios.DTO.DadosTokenJWT;
 import curso.remedios.infra.TokenService;
 import curso.remedios.usuario.Usuario;
-import curso.remedios.usuario.DTO.DadosAuth;
+import curso.remedios.usuario.DTO.DadosUser;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +28,7 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<?> login(@RequestBody @Valid DadosAuth dados) {
+    public ResponseEntity<?> login(@RequestBody @Valid DadosUser dados) {
         var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
         //tem que ser nesse DTO do próprio spring
         var auth = manager.authenticate(token);

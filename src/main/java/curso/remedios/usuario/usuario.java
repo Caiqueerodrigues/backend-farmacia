@@ -7,6 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import curso.remedios.remedio.DTO.DadosCadastroRemedio;
+import curso.remedios.usuario.DTO.DadosUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,6 +34,11 @@ public class Usuario implements UserDetails{
     private Long id;
     private String login;
     private String senha;
+
+    public Usuario(DadosUser dados) {
+        this.login = dados.login();
+        this.senha = dados.senha();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { //controle de acesso por perfis
