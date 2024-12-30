@@ -7,6 +7,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import curso.remedios.infra.TokenService;
+import curso.remedios.usuario.Usuario;
 import curso.remedios.usuario.DTO.DadosAuth;
 import jakarta.validation.Valid;
 
@@ -21,12 +23,15 @@ public class AuthController {
     @Autowired
     private AuthenticationManager manager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity<?> login(@RequestBody @Valid DadosAuth dados) {
         var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
         //tem que ser nesse DTO do próprio spring
         var auth = manager.authenticate(token);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(tokenService.generateToken((Usuario) auth.getPrincipal()));
     }
 }
