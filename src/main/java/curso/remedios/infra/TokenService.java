@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
@@ -15,9 +16,13 @@ import curso.remedios.usuario.Usuario;
 @Service
 public class TokenService {
 
+    @Value("${api.security.token.secret}")
+    //dizer que o valor da variavel vira do application.properties
+    private String secret;
+
     public String generateToken(Usuario usuario) {
         try {
-            var algorithm = Algorithm.HMAC256("123456");
+            var algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                 .withIssuer("remedios")
                 .withSubject(usuario.getLogin())
