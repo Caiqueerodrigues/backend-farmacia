@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/remedios")
-public class remedioController {
+public class RemedioController {
 
     @Autowired // instanciando o repository, injeção de dependencias
     private RemedioRepository repository;
