@@ -1,5 +1,7 @@
 package curso.remedios.controllers;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +13,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import curso.remedios.DTO.ResponseDto;
+import curso.remedios.remedio.DTO.DadosListagemRemedio;
 import curso.remedios.usuario.Usuario;
 import curso.remedios.usuario.UsuarioRepository;
 import curso.remedios.usuario.DTO.DadosCompletosUsuario;
 import curso.remedios.usuario.DTO.DadosUser;
+import curso.remedios.usuario.DTO.ListagemUsuarios;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -41,6 +47,16 @@ public class UsuarioController {
         var resposta = new ResponseDto(usuarioResponse, "", "", "");
         return ResponseEntity.ok().body(resposta);
     }
+
+    @GetMapping("/todos")
+    public ResponseEntity<ResponseDto> todosUsuarios() {
+        var usuarios = repository.findAll()
+            .stream() // Cria um Stream a partir do resultado de findAll
+            .map(ListagemUsuarios::new)  // Converte cada usuário para um ListagemUsuarios
+            .collect(Collectors.toList()); // Coleta os resultados em uma lista
+        var response = new ResponseDto(usuarios, "", "", "");
+        return ResponseEntity.ok().body(response);
+    }    
 
     @PostMapping
     @Transactional // faz o rollback caso não de certo
