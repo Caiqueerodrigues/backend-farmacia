@@ -81,7 +81,7 @@ public class UsuarioController {
 
         if(usuarioExiste == null || usuarioExiste.getId() == usuario.getId()) {
         
-            String encryptedPassword = passwordEncoder.encode(dados.senha());
+            String encryptedPassword = (!dados.senha().isBlank()) ? passwordEncoder.encode(dados.senha()) : null;
             DadosCompletosUsuario dadosUserCriptografado = new DadosCompletosUsuario(dados.id(), dados.login(), encryptedPassword, dados.ativo());
             usuario.atualizarInformacoes(dadosUserCriptografado);
             repository.save(usuario);
