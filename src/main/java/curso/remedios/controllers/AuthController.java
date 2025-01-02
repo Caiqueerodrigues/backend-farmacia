@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import curso.remedios.DTO.DadosTokenJWT;
+import curso.remedios.DTO.ResponseDto;
 import curso.remedios.infra.TokenService;
 import curso.remedios.usuario.Usuario;
 import curso.remedios.usuario.DTO.DadosUser;
@@ -32,7 +33,15 @@ public class AuthController {
         var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
         //tem que ser nesse DTO do próprio spring
         var auth = manager.authenticate(token);
-        var tokenJWT = tokenService.generateToken((Usuario) auth.getPrincipal());
+
+        Usuario usuario = (Usuario) auth.getPrincipal();
+        if (!usuario.getAtivo()) {
+            var response = new ResponseDto("", "Usuário inativo, procure a administração!", "", "");
+            return ResponseEntity.status(403).body(response);
+        }
+
+        // Gerando o token JWT para o usuário autenticado
+        var tokenJWT = tokenService.generateToken(usuario);
         return ResponseEntity.ok().body(new DadosTokenJWT(tokenJWT));
     }
 }

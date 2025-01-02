@@ -37,7 +37,7 @@ public class UsuarioController {
     public ResponseEntity<ResponseDto> buscar(@PathVariable Long id) {
         Usuario usuario = (Usuario) repository.getById(id);
         
-        var usuarioResponse = new DadosCompletosUsuario(usuario.getId(), usuario.getLogin(), "");
+        var usuarioResponse = new DadosCompletosUsuario(usuario.getId(), usuario.getLogin(), "", usuario.getAtivo());
         var resposta = new ResponseDto(usuarioResponse, "", "", "");
         return ResponseEntity.ok().body(resposta);
     }
@@ -71,13 +71,25 @@ public class UsuarioController {
     public ResponseEntity<ResponseDto> atualizar(@RequestBody @Valid DadosCompletosUsuario dados) {
         
         Usuario usuario = (Usuario) repository.getReferenceById(dados.id());
+
+        if(usuario.getLogin() == null) {
+            var resposta = new ResponseDto("", "Usuário inexistente!", "", "");
+            return ResponseEntity.status(404).body(resposta);
+        };
+
+        Usuario usuarioExiste = (Usuario) repository.findByLogin(dados.login());
+
+        if(usuarioExiste == null || usuarioExiste.getId() == usuario.getId()) {
         
-        String encryptedPassword = passwordEncoder.encode(dados.senha());
-        DadosUser dadosUserCriptografado = new DadosUser(dados.login(), encryptedPassword);
-        usuario.atualizarInformacoes(dadosUserCriptografado);
-        repository.save(usuario);
-        
-        var resposta = new ResponseDto("", "", "Usuário atualizado com sucesso!", "");
-        return ResponseEntity.ok().body(resposta);
+            String encryptedPassword = passwordEncoder.encode(dados.senha());
+            DadosCompletosUsuario dadosUserCriptografado = new DadosCompletosUsuario(dados.id(), dados.login(), encryptedPassword, dados.ativo());
+            usuario.atualizarInformacoes(dadosUserCriptografado);
+            repository.save(usuario);
+            var resposta = new ResponseDto("", "", "Usuário atualizado com sucesso!", "");
+            return ResponseEntity.ok().body(resposta);
+        } else {
+            var resposta = new ResponseDto("", "Usuário já cadastrado!", "", "");
+            return ResponseEntity.ok().body(resposta);
+        }
     }
 }

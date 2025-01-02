@@ -36,15 +36,17 @@ public class Usuario implements UserDetails{
     private Long id;
     private String login;
     private String senha;
+    private Boolean ativo;
 
     public Usuario(DadosUser dados) {
         this.login = dados.login();
         this.senha = dados.senha();
     }
 
-    public void atualizarInformacoes(DadosUser dados) {
+    public void atualizarInformacoes(DadosCompletosUsuario dados) {
         if(dados.login() != null) this.login = dados.login();
         if(dados.senha() != null) this.senha = dados.senha();
+        if(dados.ativo() != null) this.ativo = dados.ativo();
     }
 
     @Override

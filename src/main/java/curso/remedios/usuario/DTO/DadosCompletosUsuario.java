@@ -10,8 +10,9 @@ public record DadosCompletosUsuario(
     @NotBlank
     String login,
 
-    String senha
+    String senha,
 
+    Boolean ativo
 ) {
 
 }
