@@ -1,1 +1,0 @@
-ALTER TABLE remedio ADD COLUMN ativo tinyint default 1;

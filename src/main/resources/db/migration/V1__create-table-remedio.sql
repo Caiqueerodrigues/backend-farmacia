@@ -6,6 +6,6 @@ CREATE TABLE remedio(
     quantidade int not null,
     validade varchar(100) not null,
     laboratorio varchar(100) not null,
-
+    ativo tinyint default 1,
     primary key (id)
 );

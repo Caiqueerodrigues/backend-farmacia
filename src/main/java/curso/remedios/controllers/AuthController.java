@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import curso.remedios.DTO.DadosTokenJWT;
-import curso.remedios.DTO.ResponseDto;
+import curso.remedios.Exceptions.UsuarioInativoException;
 import curso.remedios.infra.TokenService;
 import curso.remedios.usuario.Usuario;
 import curso.remedios.usuario.DTO.DadosUser;
+import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,16 +30,13 @@ public class AuthController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<?> login(@RequestBody @Valid DadosUser dados) {
+    public ResponseEntity<?> login(@RequestBody @Valid DadosUser dados) throws AuthException {
         var token = new UsernamePasswordAuthenticationToken(dados.login(), dados.senha());
         //tem que ser nesse DTO do próprio spring
         var auth = manager.authenticate(token);
 
         Usuario usuario = (Usuario) auth.getPrincipal();
-        if (!usuario.getAtivo()) {
-            var response = new ResponseDto("", "Usuário inativo, procure a administração!", "", "");
-            return ResponseEntity.status(403).body(response);
-        }
+        if (!usuario.getAtivo()) throw new UsuarioInativoException("Usuário inativo, procure a administração!");
 
         // Gerando o token JWT para o usuário autenticado
         var tokenJWT = tokenService.generateToken(usuario);

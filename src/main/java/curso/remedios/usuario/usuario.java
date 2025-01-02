@@ -41,6 +41,7 @@ public class Usuario implements UserDetails{
     public Usuario(DadosUser dados) {
         this.login = dados.login();
         this.senha = dados.senha();
+        this.ativo = true;
     }
 
     public void atualizarInformacoes(DadosCompletosUsuario dados) {

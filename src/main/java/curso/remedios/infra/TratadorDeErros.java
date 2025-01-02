@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException.Forbidden;
 
 import curso.remedios.DTO.ResponseDto;
+import curso.remedios.Exceptions.UsuarioInativoException;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice //sempre que tiver uma excessao fará isso
@@ -36,5 +37,11 @@ public class TratadorDeErros {
 
         var resposta = new ResponseDto("", campos, "", "");
         return ResponseEntity.status(400).body(resposta);
+    }
+
+    @ExceptionHandler(UsuarioInativoException.class) //Criada para quando estiver inativo
+    public ResponseEntity<ResponseDto> tratador403(UsuarioInativoException ex) {
+        var resposta = new ResponseDto("", ex.getMessage(), "", "");
+        return ResponseEntity.status(403).body(resposta);
     }
 }
