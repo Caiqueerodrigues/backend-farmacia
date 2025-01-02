@@ -7,7 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import curso.remedios.remedio.DTO.DadosAlterarRemedio;
 import curso.remedios.remedio.DTO.DadosCadastroRemedio;
+import curso.remedios.usuario.DTO.DadosCompletosUsuario;
 import curso.remedios.usuario.DTO.DadosUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +40,11 @@ public class Usuario implements UserDetails{
     public Usuario(DadosUser dados) {
         this.login = dados.login();
         this.senha = dados.senha();
+    }
+
+    public void atualizarInformacoes(DadosUser dados) {
+        if(dados.login() != null) this.login = dados.login();
+        if(dados.senha() != null) this.senha = dados.senha();
     }
 
     @Override
