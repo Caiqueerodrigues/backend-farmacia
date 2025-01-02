@@ -3,6 +3,7 @@ package curso.remedios.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,9 @@ public class UsuarioController {
     @Autowired
     private UsuarioRepository repository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping
     @Transactional // faz o rollback caso não de certo
     public ResponseEntity<ResponseDto> cadastrar(@RequestBody @Valid DadosUser dados, UriComponentsBuilder uriBuilder) {
@@ -34,7 +38,11 @@ public class UsuarioController {
             return ResponseEntity.status(400).body(response);
         }
         
-        var user = new Usuario(dados); //para poder pegar o id usuario cadastrado
+        String encryptedPassword = passwordEncoder.encode(dados.senha()); // Criptografa a senha
+
+        DadosUser dadosUserCriptografado = new DadosUser(dados.login(), encryptedPassword); 
+        // para criptografar a senha no novo obj de usuario
+        var user = new Usuario(dadosUserCriptografado); //para poder pegar o id usuario cadastrado
         repository.save(user);
         
         var resposta = new ResponseDto("", "", "Usuário cadastrado com sucesso!", "");
