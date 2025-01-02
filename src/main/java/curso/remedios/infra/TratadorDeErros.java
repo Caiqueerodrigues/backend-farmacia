@@ -3,15 +3,17 @@ package curso.remedios.infra;
 import java.nio.file.AccessDeniedException;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException.Forbidden;
 
 import curso.remedios.DTO.ResponseDto;
-import curso.remedios.Exceptions.UsuarioInativoException;
+import curso.remedios.Exceptions.ExcessaoPersonlizada;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice //sempre que tiver uma excessao fará isso
@@ -39,9 +41,15 @@ public class TratadorDeErros {
         return ResponseEntity.status(400).body(resposta);
     }
 
-    @ExceptionHandler(UsuarioInativoException.class) //Criada para quando estiver inativo
-    public ResponseEntity<ResponseDto> tratador403(UsuarioInativoException ex) {
+    @ExceptionHandler(ExcessaoPersonlizada.class) //Criada para quando estiver inativo
+    public ResponseEntity<ResponseDto> personaliza(ExcessaoPersonlizada ex) {
         var resposta = new ResponseDto("", ex.getMessage(), "", "");
         return ResponseEntity.status(403).body(resposta);
+    }
+
+    @ExceptionHandler(Exception.class) //qualquer outro erro interno
+    public ResponseEntity<ResponseDto> tratador500() {
+        var response = new ResponseDto("", "Por favor, tente novamente mais tarde!", "", "");
+        return ResponseEntity.status(500).body(response);
     }
 }

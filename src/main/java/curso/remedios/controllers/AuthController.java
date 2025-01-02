@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import curso.remedios.DTO.DadosTokenJWT;
-import curso.remedios.Exceptions.UsuarioInativoException;
+import curso.remedios.Exceptions.ExcessaoPersonlizada;
 import curso.remedios.infra.TokenService;
 import curso.remedios.usuario.Usuario;
 import curso.remedios.usuario.DTO.DadosUser;
@@ -36,7 +36,7 @@ public class AuthController {
         var auth = manager.authenticate(token);
 
         Usuario usuario = (Usuario) auth.getPrincipal();
-        if (!usuario.getAtivo()) throw new UsuarioInativoException("Usuário inativo, procure a administração!");
+        if (!usuario.getAtivo()) throw new ExcessaoPersonlizada("Usuário inativo, procure a administração!");
 
         // Gerando o token JWT para o usuário autenticado
         var tokenJWT = tokenService.generateToken(usuario);
